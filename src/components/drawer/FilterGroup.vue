@@ -32,13 +32,36 @@
               {{ child.title }}
               <v-spacer />
               {{ child.append }}
-            </v-layout>>
+            </v-layout>
           </template>
           <template v-else>
             {{ child.title }}
           </template>
         </v-list-tile-title>
       </v-list-tile-content>
+      <v-list-tile-action v-if="group.action">
+        <v-menu bottom left>
+          <template #activator="{ on }">
+            <v-btn
+                    icon
+                    @click.stop="on.click"
+            >
+              <v-icon >mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-tile
+                    v-for="(item, i) in group.action"
+                    :key="i"
+                    v-if="item.show(child)"
+                    @click="item.action(child)"
+            >
+              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+      </v-list-tile-action>
     </v-list-tile>
   </v-list-group>
 </template>
@@ -92,5 +115,6 @@ export default Vue.extend({
 
 .filter-group ::v-deep .v-list__group__items .v-list__tile {
   height: 2.2em;
+  padding: 0 4px;
 }
 </style>

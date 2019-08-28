@@ -5,10 +5,10 @@
         class="headline grey lighten-4"
       >
         <v-icon class="mr-2">mdi-delete</v-icon>
-        <span>Delete torrents</span>
+        <span>删除</span>
       </v-card-title>
       <v-card-text>
-         Are you sure you want to delete the selected torrents from the transfer list?
+         确认删除选中的任务？
         <ol class="torrents pt-4">
           <li v-for="(row, i) in torrents" :key="i">
             {{ row.name }}
@@ -18,19 +18,19 @@
         <v-checkbox
           v-model="deleteFiles"
           prepend-icon="mdi-file-cancel"
-          label="Also delete files"
+          label="同时删除文件"
         />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn flat @click="closeDialog">Cancel</v-btn>
+        <v-btn flat @click="closeDialog">取消</v-btn>
         <v-btn
           @click="submit"
           color="warning"
           :disabled="submitting"
           :loading="submitting"
         >
-          Delete
+          删除
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -47,7 +47,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      deleteFiles: false,
+      deleteFiles: true,
       submitting: false,
       torrents: [],
     };

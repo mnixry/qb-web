@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import Vue from 'vue';
+import _ from 'lodash';
 
 export function toPrecision(value: number, precision: number) {
   if (value >= (Math.pow(10, precision))) {
@@ -84,6 +85,7 @@ export function formatDuration(value: number, options?: DurationOptions) {
 }
 
 Vue.filter('formatDuration', formatDuration);
+Vue.filter('boolean', val=>val?'是':'否');
 
 Vue.filter('formatTimestamp', (timestamp: number) => {
   if (timestamp === null) {
@@ -91,6 +93,15 @@ Vue.filter('formatTimestamp', (timestamp: number) => {
   }
 
   const m = dayjs.unix(timestamp);
+  return m.format('YYYY-MM-DD HH:mm:ss');
+});
+
+Vue.filter('formatDate', (date: string) => {
+  if (!date) {
+    return '';
+  }
+
+  const m = dayjs(date);
   return m.format('YYYY-MM-DD HH:mm:ss');
 });
 
@@ -107,3 +118,28 @@ export function formatProgress(progress: number) {
 }
 
 Vue.filter('progress', formatProgress);
+
+Vue.filter('torrentStatus',(state: string)=>{
+  return _.get({
+    'metaDL':'',
+    'allocating':'分配中',
+    'downloading':'下载中',
+    'forcedDL':'强制下载',
+    'uploading':'上传中',
+    'forcedUP':'强制上传',
+    'stalledDL':'等待下载',
+    'stalledUP':'等待上传',
+    'pausedDL':'暂停下载',
+    'pausedUP':'暂停上传',
+    'queuedDL':'队列下载',
+    'queuedUP':'队列上传',
+    'checkingDL':'检查下载',
+    'checkingUP':'检查上传',
+    'queuedForChecking':'检查队列',
+    'checkingResumeData':'检查hash',
+    'moving':'移动中',
+    'error':'错误',
+    'unknown':'未知',
+    'missingFiles':'丢失文件'
+    },state,state)
+})

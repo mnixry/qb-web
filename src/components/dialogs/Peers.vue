@@ -53,16 +53,16 @@ export default Vue.extend({
   data() {
     const headers = [
       { text: 'IP', value: 'ip' },
-      { text: 'Connection', value: 'connection' },
-      { text: 'Flags', value: 'flags' },
-      { text: 'Client', value: 'client' },
-      { text: 'Progress', value: 'progress' },
-      { text: 'DL Speed', value: 'dl_speed' },
-      { text: 'Downloaded', value: 'downloaded' },
-      { text: 'UP Speed', value: 'up_speed' },
-      { text: 'Uploaded', value: 'uploaded' },
-      { text: 'Relevance', value: 'relevance' },
-      { text: 'Files', value: 'files' },
+      { text: '协议', value: 'connection' },
+      { text: '标记', value: 'flags' },
+      { text: '客户端', value: 'client' },
+      { text: '进度', value: 'progress' },
+      { text: '下载速度', value: 'dl_speed' },
+      { text: '已下载', value: 'downloaded' },
+      { text: '上传速度', value: 'up_speed' },
+      { text: '已上传', value: 'uploaded' },
+      { text: '相关度', value: 'relevance' },
+      { text: '文件', value: 'files' },
     ];
 
     return {

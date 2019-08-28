@@ -1,15 +1,15 @@
 module.exports = {
   outputDir: 'dist/public',
 
-  pwa: {
-    name: 'qBittorrent Web UI',
-  },
-
+  lintOnSave:false,
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://192.168.1.2:8080',
-      }
+        target: 'http://10.10.10.5:38800',
+        // target: 'http://10.1.1.5:38800',
+        ws: true,
+        changeOrigin: true,
+    }
     }
   }
 }

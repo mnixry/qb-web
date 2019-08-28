@@ -1,153 +1,180 @@
 import 'axios';
-import Axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import Axios, {AxiosInstance, AxiosResponse, AxiosError} from 'axios';
 
 class Api {
-  private axios: AxiosInstance;
+    private axios: AxiosInstance;
 
-  constructor() {
-    this.axios = Axios.create({
-      baseURL: '/api/v2',
-    });
+    constructor() {
+        this.axios = Axios.create({
+            baseURL: '/api/v2'
+        });
 
-    this.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-  }
-
-  public getAppVersion() {
-    return this.axios.get('/app/version');
-  }
-
-  public getApiVersion() {
-    return this.axios.get('/app/webapiVersion');
-  }
-
-  public login(params: any) {
-    const data = new URLSearchParams(params);
-    return this.axios.post('/auth/login', data, {
-      validateStatus(status) {
-        return status === 200 || status === 403;
-      },
-    }).then(this.handleResponse);
-  }
-
-  public getGlobalTransferInfo() {
-    return this.axios.get('/transfer/info');
-  }
-
-  public getAppPreferences() {
-    return this.axios.get('/app/preferences');
-  }
-
-  public getMainData(rid?: number) {
-    const params = {
-      rid,
-    };
-    return this.axios.get('/sync/maindata', {
-      params,
-    });
-  }
-
-  public addTorrents(params: any, torrents?: any) {
-    let data: any;
-    if (torrents) {
-      const formData = new FormData();
-      for (const [key, value] of Object.entries(params)) {
-        formData.append(key, value);
-      }
-
-      for (const torrent of torrents) {
-        formData.append('torrents', torrent);
-      }
-
-      data = formData;
-    } else {
-      data = new URLSearchParams(params);
+        this.axios.defaults.headers.post['Content-Type'] =
+            'application/x-www-form-urlencoded';
     }
-    return this.axios.post('/torrents/add', data).then(this.handleResponse);
-  }
 
-  public switchToOldUi() {
-    const params = {
-      alternative_webui_enabled: false,
-    };
+    public getAppVersion() {
+        return this.axios.get('/app/version');
+    }
 
-    const data = new URLSearchParams({
-      json: JSON.stringify(params),
-    });
+    public getApiVersion() {
+        return this.axios.get('/app/webapiVersion');
+    }
 
-    return this.axios.post('/app/setPreferences', data);
-  }
+    public login(params: any) {
+        const data = new URLSearchParams(params);
+        return this.axios
+            .post('/auth/login', data, {
+                validateStatus(status) {
+                    return status === 200 || status === 403;
+                }
+            })
+            .then(this.handleResponse);
+    }
 
-  public getLogs(lastId?: number) {
-    const params = {
-      last_known_id: lastId,
-    };
+    public getGlobalTransferInfo() {
+        return this.axios.get('/transfer/info');
+    }
 
-    return this.axios.get('/log/main', {
-      params,
-    }).then(this.handleResponse);
-  }
+    public getAppPreferences() {
+        return this.axios.get('/app/preferences');
+    }
 
-  public toggleSpeedLimitsMode() {
-    return this.axios.post('/transfer/toggleSpeedLimitsMode');
-  }
+    public getMainData(rid?: number) {
+        const params = {
+            rid
+        };
+        return this.axios.get('/sync/maindata', {
+            params
+        });
+    }
 
-  public deleteTorrents(hashes: string[], deleteFiles: boolean) {
-    return this.actionTorrents('delete', hashes, {deleteFiles});
-  }
+    public addTorrents(params: any, torrents?: any) {
+        let data: any;
+        if (torrents) {
+            const formData = new FormData();
+            for (const [key, value] of Object.entries(params)) {
+                formData.append(key, value);
+            }
 
-  public pauseTorrents(hashes: string[]) {
-    return this.actionTorrents('pause', hashes);
-  }
+            for (const torrent of torrents) {
+                formData.append('torrents', torrent);
+            }
 
-  public resumeTorrents(hashes: string[]) {
-    return this.actionTorrents('resume', hashes);
-  }
+            data = formData;
+        } else {
+            data = new URLSearchParams(params);
+        }
+        return this.axios.post('/torrents/add', data).then(this.handleResponse);
+    }
 
-  public reannounceTorrents(hashes: string[]) {
-    return this.actionTorrents('reannounce', hashes);
-  }
+    public switchToOldUi() {
+        const params = {
+            alternative_webui_enabled: false
+        };
 
-  public recheckTorrents(hashes: string[]) {
-    return this.actionTorrents('recheck', hashes);
-  }
+        const data = new URLSearchParams({
+            json: JSON.stringify(params)
+        });
 
-  public setTorrentsCategory(hashes: string[], category: string) {
-    return this.actionTorrents('setCategory', hashes, {category});
-  }
+        return this.axios.post('/app/setPreferences', data);
+    }
 
-  public getTorrentTracker(hash: string) {
-    const params = {
-      hash,
-    };
+    public getLogs(lastId?: number) {
+        const params = {
+            last_known_id: lastId
+        };
 
-    return this.axios.get('/torrents/trackers', {
-      params,
-    }).then(this.handleResponse);
-  }
+        return this.axios
+            .get('/log/main', {
+                params
+            })
+            .then(this.handleResponse);
+    }
 
-  public getTorrentPeers(hash: string, rid?: number) {
-    const params = {
-      hash,
-      rid,
-    };
+    public toggleSpeedLimitsMode() {
+        return this.axios.post('/transfer/toggleSpeedLimitsMode');
+    }
 
-    return this.axios.get('/sync/torrentPeers', {
-      params,
-    }).then(this.handleResponse);
-  }
+    public deleteTorrents(hashes: string[], deleteFiles: boolean) {
+        return this.actionTorrents('delete', hashes, {deleteFiles});
+    }
 
-  private actionTorrents(action: string, hashes: string[], extra?: any) {
-    const params: any = {
-      hashes: hashes.join('|'),
-      ...extra,
-    };
-    const data = new URLSearchParams(params);
-    return this.axios.post('/torrents/' + action, data).then(this.handleResponse);
-  }
+    public pauseTorrents(hashes: string[]) {
+        return this.actionTorrents('pause', hashes);
+    }
 
-  private handleResponse(resp: AxiosResponse) {
-    return resp.data;
-  }
+    public resumeTorrents(hashes: string[]) {
+        return this.actionTorrents('resume', hashes);
+    }
+
+    public reannounceTorrents(hashes: string[]) {
+        return this.actionTorrents('reannounce', hashes);
+    }
+
+    public recheckTorrents(hashes: string[]) {
+        return this.actionTorrents('recheck', hashes);
+    }
+
+    public setTorrentsCategory(hashes: string[], category: string) {
+        return this.actionTorrents('setCategory', hashes, {category});
+    }
+
+    public setTorrentsAutomatic(hashes: string[], enable: boolean) {
+        return this.actionTorrents('setAutoManagement', hashes, {enable});
+    }
+
+    public getTorrentTracker(hash: string) {
+        const params = {
+            hash
+        };
+
+        return this.axios
+            .get('/torrents/trackers', {
+                params
+            })
+            .then(this.handleResponse);
+    }
+
+    public getTorrentPeers(hash: string, rid?: number) {
+        const params = {
+            hash,
+            rid
+        };
+
+        return this.axios
+            .get('/sync/torrentPeers', {
+                params
+            })
+            .then(this.handleResponse);
+    }
+
+    private actionTorrents(action: string, hashes: string[], extra?: any) {
+        const params: any = {
+            hashes: hashes.join('|'),
+            ...extra
+        };
+        const data = new URLSearchParams(params);
+        return this.axios
+            .post('/torrents/' + action, data)
+            .then(this.handleResponse);
+    }
+
+    public actionRss(action: string, params: any = {}) {
+        return this.axios
+            .post(`/rss/${action}`, new URLSearchParams(params))
+            .then(this.handleResponse);
+    }
+
+    public action(action: string, params: any = {}) {
+        return this.axios
+            .post(`/${action}`, new URLSearchParams(params))
+            .then(this.handleResponse);
+    }
+
+    private handleResponse(resp: AxiosResponse) {
+        return resp.data;
+    }
 }
 
 export const api = new Api();

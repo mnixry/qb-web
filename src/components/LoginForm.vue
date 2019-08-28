@@ -2,7 +2,7 @@
   <v-dialog v-model="value" persistent width="25em">
     <v-card>
       <v-toolbar dark color="primary">
-        <v-toolbar-title>Login</v-toolbar-title>
+        <v-toolbar-title>登录</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
         <v-form
@@ -18,8 +18,8 @@
                 <v-text-field
                   v-model="params.username"
                   prepend-icon="mdi-account"
-                  label="Username"
-                  :rules="[v => !!v || 'Username is required']"
+                  label="用户名"
+                  :rules="[v => !!v || '用户名必填']"
                   autofocus
                   required
                 />
@@ -28,9 +28,9 @@
                   prepend-icon="mdi-lock"
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   @click:append="showPassword = !showPassword"
-                  label="Password"
+                  label="密码"
                   :type="showPassword ? 'text' : 'password'"
-                  :rules="[v => !!v || 'Password is required']"
+                  :rules="[v => !!v || '密码必填']"
                   required
                 />
               </v-flex>
@@ -51,7 +51,7 @@
           :disabled="!valid || submitting"
           :loading="submitting"
         >
-          Submit
+          登录
         </v-btn>
       </v-card-actions>
     </v-card>

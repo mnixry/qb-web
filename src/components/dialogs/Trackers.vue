@@ -33,12 +33,12 @@ export default Vue.extend({
     const headers = [
       { text: '#', value: 'tier' },
       { text: 'URL', value: 'url' },
-      { text: 'Status', value: 'status' },
-      { text: 'Peers', value: 'num_peers' },
-      { text: 'Seeds', value: 'num_seeds' },
-      { text: 'Leeches', value: 'num_leeches' },
-      { text: 'Downloaded', value: 'num_downloaded' },
-      { text: 'Message', value: 'msg' },
+      { text: '状态', value: 'status' },
+      { text: '节点数', value: 'num_peers' },
+      { text: '做种', value: 'num_seeds' },
+      { text: '吸血者', value: 'num_leeches' },
+      { text: '已下载', value: 'num_downloaded' },
+      { text: '信息', value: 'msg' },
     ];
 
     return {
@@ -49,11 +49,11 @@ export default Vue.extend({
   filters: {
     formatTrackerStatus(status: number) {
       const map = [
-        'Disabled',
-        'Not contacted',
-        'Working',
-        'Updating',
-        'Not working',
+        '已关闭',
+        '未连接',
+        '工作',
+        '更新中',
+        '未工作',
       ];
 
       return map[status];

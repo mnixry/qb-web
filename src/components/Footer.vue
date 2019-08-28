@@ -4,7 +4,6 @@
   v-if="isDataReady">
   <v-flex shrink v-if="app">
     <v-layout
-      :column="phoneLayout"
       :align-center="!phoneLayout"
     >
       <v-flex v-if="!phoneLayout">
@@ -15,7 +14,7 @@
             </span>
           </template>
           <span>
-            API version: {{ app.apiVersion }}
+            API版本 {{ app.apiVersion }}
           </span>
         </v-tooltip>
       </v-flex>
@@ -38,7 +37,7 @@
     >
       <v-flex v-if="!phoneLayout" class="icon-label">
         <v-icon>mdi-access-point-network</v-icon>
-        {{ info.dht_nodes }} nodes
+        {{ info.dht_nodes }} 节点
       </v-flex>
       <v-divider vertical class="mx-2" v-if="!phoneLayout"/>
       <v-flex class="icon-label">
@@ -49,11 +48,11 @@
               :color="info.connection_status | connectionIconColor"
             >mdi-{{ info.connection_status | connectionIcon }}</v-icon>
             <span v-if="phoneLayout">
-              Network {{ info.connection_status }}
+              网络状态 {{ info.connection_status }}
             </span>
           </template>
           <span>
-            Network {{ info.connection_status }}
+            网络状态 {{ info.connection_status }}
           </span>
         </v-tooltip>
       </v-flex>
@@ -64,7 +63,7 @@
           hide-details
           :value="speedLimited"
           @change="toggleSpeedLimitsMode"
-          label="Alternative speed limits"
+          label="激活限速模式"
           class="mt-0 pt-0 speed-switch"
         >
           <template v-slot:prepend>
@@ -82,7 +81,7 @@
             >mdi-speedometer</v-icon>
           </template>
           <span>
-            Alternative speed limits {{ speedLimited ? 'enabled' : 'disabled' }}
+            限速模式：{{ speedLimited ? '开启' : '关闭' }}
           </span>
         </v-tooltip>
       </v-flex>
@@ -96,7 +95,7 @@
           <template v-if="info.dl_rate_limit">
             ({{ info.dl_rate_limit | formatSize}}/s)
           </template>
-          <template v-if="!phoneLayout">
+          <template>
             [{{ info.dl_info_data | formatSize }}/{{ info.alltime_dl | formatSize }}]
           </template>
         </span>
@@ -111,7 +110,7 @@
           <template v-if="info.up_rate_limit">
             ({{ info.up_rate_limit | formatSize}}/s)
           </template>
-          <template v-if="!phoneLayout">
+          <template>
             [{{ info.up_info_data | formatSize }}/{{ info.alltime_ul | formatSize }}]
           </template>
         </span>
@@ -125,6 +124,7 @@
 import Vue from 'vue';
 import { api } from '../Api';
 import { mapState, mapGetters } from 'vuex';
+import _ from 'lodash'; 
 
 export default Vue.extend({
   props: {
@@ -272,7 +272,8 @@ export default Vue.extend({
   transform: scaleX(-1);
 }
 .in-drawer {
-  padding: 0 16px 0 20px;
+  padding: 0 5px;
+  font-size: 12px;
 
   .no-icon {
     margin-left: 24px;

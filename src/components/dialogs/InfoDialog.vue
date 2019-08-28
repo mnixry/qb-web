@@ -10,24 +10,36 @@
         class="headline grey lighten-4"
       >
         <v-icon class="mr-2">mdi-alert-circle</v-icon>
-        <span>Info</span>
+        <span>信息</span>
       </v-card-title>
       <v-card-text>
         <v-tabs v-model="mTab">
-          <!-- <v-tab>
-            General
-          </v-tab> -->
+          <v-tab href="#info">
+            种子信息
+          </v-tab>
           <v-tab href="#trackers">
             Trackers
           </v-tab>
           <v-tab href="#peers">
-            Peers
+            节点
           </v-tab>
           <!-- <v-tab>
             Content
           </v-tab> -->
         </v-tabs>
         <v-tabs-items :value="mTab" touchless>
+          <v-tab-item value="info">
+            <panel
+              v-for="torrent in torrents"
+              :key="torrent.hash"
+              :title="torrent.name"
+              :single="torrents.length === 1"
+            >
+              <Torrent
+                :torrent="torrent"
+              />
+            </panel>
+          </v-tab-item>
           <v-tab-item value="trackers">
             <panel
               v-for="torrent in torrents"
@@ -58,7 +70,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn flat @click="closeDialog">Close</v-btn>
+        <v-btn flat @click="closeDialog">关闭</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -68,11 +80,13 @@
 import _ from 'lodash';
 import Vue from 'vue'
 import Trackers from './Trackers.vue';
+import Torrent from './Torrent.vue';
 import Peers from './Peers.vue';
 import Panel from './Panel.vue';
 
 export default Vue.extend({
   components: {
+    Torrent,
     Trackers,
     Peers,
     Panel,
