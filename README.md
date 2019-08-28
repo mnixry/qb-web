@@ -19,4 +19,12 @@
 
 下载release后解压，在原版web设置中指定备用UI位置，开启即可
 
+# 注意：
+
+备用UI位置需要指向public文件夹的父级文件夹
+
+![22](https://user-images.githubusercontent.com/2039910/63835573-4de53100-c9aa-11e9-9901-43a7f31bcf29.jpg)
+![33](https://user-images.githubusercontent.com/2039910/63835575-4de53100-c9aa-11e9-8caf-dc4679cafc2e.jpg)
+
+
 
