@@ -1,33 +1,22 @@
 # qb-web
-## Info
-[![Release](https://img.shields.io/github/release-pre/CzBiX/qb-web.svg?label=Pre-release)](https://github.com/CzBiX/qb-web/releases/latest)
-[![Requirements](https://img.shields.io/badge/Tested-qBittorrent%20≥%20v4.1.5-brightgreen.svg)](#)
 
-## Download
+![1](https://user-images.githubusercontent.com/2039910/63831159-9bf53700-c9a0-11e9-8227-c0fdf06d9067.png)
+![2](https://user-images.githubusercontent.com/2039910/63831161-9bf53700-c9a0-11e9-8876-1c6aca2633fe.png)
+![3](https://user-images.githubusercontent.com/2039910/63831162-9c8dcd80-c9a0-11e9-858a-023b6bc03f00.png)
+![4](https://user-images.githubusercontent.com/2039910/63831164-9c8dcd80-c9a0-11e9-909c-9ee2605b9ec3.png)
+![5](https://user-images.githubusercontent.com/2039910/63831165-9c8dcd80-c9a0-11e9-8b5d-8e5b14a0e512.png)
+![6](https://user-images.githubusercontent.com/2039910/63831166-9d266400-c9a0-11e9-819c-0784b1fc9bf4.png)
+![7](https://user-images.githubusercontent.com/2039910/63831167-9d266400-c9a0-11e9-9073-a6460e4594d8.png)
+![8](https://user-images.githubusercontent.com/2039910/63831168-9d266400-c9a0-11e9-88e4-5a44b45adc1d.png)
+![9](https://user-images.githubusercontent.com/2039910/63831169-9dbefa80-c9a0-11e9-9f5f-e2633cb5f9f3.png)
 
-[Releases](https://github.com/CzBiX/qb-web/releases)
 
-## Development setup
-```
-npm install
-```
+## 下载
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+[Releases](https://github.com/miniers/qb-web/releases)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## 使用方法
 
-### Run your tests
-```
-npm run test
-```
+下载release后解压，在原版web设置中指定备用UI位置，开启即可
 
-### Lints and fixes files
-```
-npm run lint
-```
+
