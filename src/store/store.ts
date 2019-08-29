@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 
 import rss from './modules/rss';
 import category from './modules/category';
+import tag from './modules/tag';
 
 Vue.use(Vuex);
 
@@ -55,6 +56,7 @@ export default new Vuex.Store({
     modules: {
         rss,
         category,
+        tag,
     },
     actions: {
         async getPreferences({commit}) {
@@ -72,7 +74,7 @@ export default new Vuex.Store({
         async getAllData({commit, state}) {
             const rid = state.rid ? state.rid : null;
             const resp = await api.getMainData(rid);
-            return commit('updateMainData', resp.data);
+            commit('updateMainData', resp.data);
         },
     },
     mutations: {
@@ -100,6 +102,17 @@ export default new Vuex.Store({
                         delete tmp.categories[key];
                     }
                     delete payload.categories_removed;
+                }
+                if (payload.tags_removed) {
+                    _.remove(tmp.tags, tag => {
+                        return _.indexOf(payload.tags_removed, tag) >= 0;
+                    });
+                    delete payload.tags_removed;
+                }
+                if (payload.tags) {
+                    tmp.tags = tmp.tags.concat(payload.tags);
+                    delete payload.tags;
+
                 }
                 state.mainData = _.merge(tmp, payload);
             }
@@ -137,26 +150,12 @@ export default new Vuex.Store({
                 return _.merge({}, value, {hash: key});
             });
         },
-        allCategories(state) {
-            if (!state.mainData) {
-                return [];
-            }
 
-            const categories = _.map(state.mainData.categories, (value, key) => {
-                return _.merge({}, value, {key});
-            });
-            return _.sortBy(categories, 'name');
-        },
-        torrentGroupByCategory(state, getters) {
-            // console.log(_.groupBy(getters.allTorrents, torrent => torrent.category))
-            return _.groupBy(getters.allTorrents, torrent => torrent.category);
-        },
         torrentGroupBySite(state, getters) {
             return _.groupBy(getters.allTorrents, torrent => {
                 if (!torrent.tracker) {
                     return '';
                 }
-
                 const url = new URL(torrent.tracker);
                 return url.hostname;
             });

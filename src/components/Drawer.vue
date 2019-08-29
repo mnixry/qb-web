@@ -113,7 +113,6 @@
         },
 
         created() {
-            this.basicItems = [];
             this.endItems = [
                 {icon: "mdi-settings", text: "设置", click: () => this.updateOptions("showSetting", true)},
                 {
@@ -126,7 +125,7 @@
                     text: "RSS",
                     click: () => this.updateOptions("showRss", true)
                 },
-                { icon: 'mdi-history', text: '切换至原生UI', click: this.switchUi },
+                {icon: "mdi-history", text: "切换至原生UI", click: this.switchUi},
             ];
         },
 
@@ -134,14 +133,20 @@
             ...mapGetters([
                 "isDataReady",
                 "allTorrents",
-                "allCategories",
-                "torrentGroupByCategory",
                 "torrentGroupBySite",
                 "torrentGroupByState"
             ]),
+            ...mapGetters("tag", [
+                "torrentGroupByTag",
+                "allTags"
+            ]),
+            ...mapGetters("category", [
+                "allCategories",
+                "torrentGroupByCategory",
+            ]),
             items() {
                 if (!this.isDataReady) {
-                    return _.concat(this.basicItems, this.endItems);
+                    return this.endItems;
                 }
 
                 const filterGroups = [];
@@ -199,7 +204,7 @@
                     select: "category",
                     action: [{
                         title: "添加分类",
-                        show:()=>true,
+                        show: () => true,
                         action: async (item) => {
                             let res = await this.$dialog.form({
                                 title: "添加分类",
@@ -218,7 +223,7 @@
                         },
                     }, {
                         title: "编辑分类",
-                        show:({key})=>!!key,
+                        show: ({key}) => !!key,
                         action: async (item) => {
                             let res = await this.$dialog.prompt({
                                 text: `请输入分类 ${item.key} 保存地址`,
@@ -234,7 +239,7 @@
                         },
                     }, {
                         title: "删除分类",
-                        show:({key})=>!!key,
+                        show: ({key}) => !!key,
                         action: (item) => {
                             this.$dialog.confirm({
                                 text: `确定删除 ${item.key} ?`,
@@ -258,6 +263,62 @@
                     children: categories
                 });
 
+                const tags: any[] = _.map(["", ...this.allTags], tag => {
+                    let value = this.torrentGroupByTag[tag];
+                    if (_.isUndefined(value)) {
+                        value = [];
+                    }
+                    const size = formatSize(_.sumBy(value, "size"));
+                    const title = `${tag ? tag : "无标签"} (${value.length})`;
+                    const append = `[${size}]`;
+                    return {icon: "mdi-tag", title, key: tag, append};
+                });
+
+                filterGroups.push({
+                    icon: "mdi-menu-up",
+                    "icon-alt": "mdi-menu-down",
+                    title: "标签",
+                    model: !this.$vuetify.breakpoint.xsOnly,
+                    select: "tag",
+                    action: [{
+                        title: "添加标签",
+                        show: ({key}) => !key,
+                        action: async (item) => {
+                            this.$dialog.form({
+                                title: "添加标签",
+                                forms: [{
+                                    key: "tags",
+                                    name: "标签名称"
+                                }]
+                            }).then(r => {
+                                r && this.$store.dispatch("tag/createTags", res);
+                            })
+                        },
+                    }, {
+                        title: "删除标签",
+                        show: ({key}) => !!key,
+                        action: (item) => {
+                            this.$dialog.confirm({
+                                text: `确定删除 ${item.key} ?`,
+                                title: "删除标签",
+                            }).then(r => {
+                                r && this.$store.dispatch("tag/deleteTags", {
+                                    tags: [item.key]
+                                });
+                            });
+
+                        }
+                    }],
+                    children: [
+                        {
+                            icon: "mdi-tag",
+                            title: `所有 (${this.allTorrents.length})`,
+                            key: null,
+                            append: `[${totalSize}]`
+                        },
+                        ...tags
+                    ]
+                });
                 const sites: any[] = _.sortBy(
                     Object.entries(this.torrentGroupBySite).map(([key, value]: any[]) => {
                         const size = formatSize(_.sumBy(value, "size"));
@@ -279,7 +340,7 @@
                     children: sites
                 });
 
-                return _.concat(this.basicItems, [{filterGroups}], this.endItems);
+                return _.concat([{filterGroups}], this.endItems);
             }
         },
 

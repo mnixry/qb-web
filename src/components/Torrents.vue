@@ -55,6 +55,38 @@
                         </v-list-tile>
                     </v-list>
                 </v-menu>
+                <v-menu offset-y :max-height="500">
+                    <template v-slot:activator="{ on }">
+                        <v-btn icon v-on="on" title="标签">
+                            <v-icon>mdi-tag</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list class="tag-actions">
+                        <v-subheader @click.stop="addTorrentsTag"><v-btn flat>新增标签</v-btn></v-subheader>
+                        <v-divider/>
+                        <v-list-tile
+                                v-for="(item, i) in allTags"
+                                :key="i"
+                                @click="setTorrentsTag(item)"
+                        >
+                            <v-list-tile-action>
+                                <v-icon>mdi-folder-open</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title>{{ item }}</v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                        <v-divider/>
+                        <v-list-tile @click="removeTorrentsTag()">
+                            <v-list-tile-action>
+                                <v-icon>mdi-folder-remove</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title>重置</v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list>
+                </v-menu>
                 <v-menu offset-y>
                     <template v-slot:activator="{ on }">
                         <v-btn icon v-on="on" title="设置自动管理">
@@ -158,7 +190,7 @@
     import Vue from "vue";
     import ConfirmDeleteDialog from "./dialogs/ConfirmDeleteDialog.vue";
     import InfoDialog from "./dialogs/InfoDialog.vue";
-    import {mapState, mapGetters, mapMutations} from "vuex";
+    import {mapState, mapActions, mapGetters, mapMutations} from "vuex";
     import _ from "lodash";
     import {api} from "../Api";
     import {formatSize, formatDuration} from "../filters";
@@ -285,10 +317,12 @@
             ...mapGetters([
                 "isDataReady",
                 "allTorrents",
-                "allCategories",
-                "torrentGroupByCategory",
                 "torrentGroupBySite",
                 "torrentGroupByState"
+            ]),
+            ...mapGetters("category", [
+                "allCategories",
+                "torrentGroupByCategory",
             ]),
             ...mapState({
                 prefs: (state: any) => state.preferences,
@@ -296,6 +330,11 @@
                     return getters.config.filter;
                 }
             }),
+
+            ...mapGetters("tag", [
+                "allTags",
+                "torrentGroupByTag",
+            ]),
             hasSelected() {
                 return this.selectedRows.length;
             },
@@ -320,6 +359,12 @@
                     list = _.intersection(
                         list,
                         this.torrentGroupByState[this.filter.state]
+                    );
+                }
+                if (this.filter.tag !== null) {
+                    list = _.intersection(
+                        list,
+                        this.torrentGroupByTag[this.filter.tag]
                     );
                 }
 
@@ -362,6 +407,7 @@
 
         methods: {
             ...mapMutations(["updateConfig"]),
+            ...mapActions("tag", ["addTags", "removeTags"]),
             confirmDelete() {
                 this.toDelete = this.selectedRows;
             },
@@ -408,22 +454,22 @@
                                     newUrl
                                 };
                             }).compact().value();
-                        if(items.length){
+                        if (items.length) {
                             const isChange = await this.$dialog.confirm({
                                 title: `共有${items.length}个符合条件的种子`,
-                                text: `<p>${items.map((item,index) => `${index+1}. ${item.name}`).join("</p><p>")}</p>`,
-                                width:500,
+                                text: `<p>${items.map((item, index) => `${index + 1}. ${item.name}`).join("</p><p>")}</p>`,
+                                width: 500,
                                 waitForResult: true
                             });
-                            const result = (isChange?items:[]).reduce(async (promise, item) => {
+                            const result = (isChange ? items : []).reduce(async (promise, item) => {
                                 await promise;
                                 const {hash, origUrl, newUrl} = item;
-                                return  api.action("torrents/editTracker", {
+                                return api.action("torrents/editTracker", {
                                     hash,
                                     origUrl,
                                     newUrl,
                                 });
-                            },Promise.resolve());
+                            }, Promise.resolve());
                         }
 
                     }
@@ -441,6 +487,23 @@
             },
             async setTorrentsCategory(category: string) {
                 await api.setTorrentsCategory(this.selectedHashes, category);
+            },
+            async addTorrentsTag() {
+                this.$dialog.form({
+                    title: "添加标签",
+                    forms: [{
+                        key: "tags",
+                        name: "标签名称"
+                    }]
+                }).then(r => {
+                    r && this.addTags({hashes: this.selectedHashes, tags: r.tags});
+                });
+            },
+            async setTorrentsTag(tag: string) {
+                await this.addTags({hashes: this.selectedHashes, tags: [tag]});
+            },
+            async removeTorrentsTag(tag: string) {
+                await this.removeTags({hashes: this.selectedHashes, tags: [tag]});
             },
             async setTorrentsAutomatic(enable: boolean) {
                 await api.setTorrentsAutomatic(this.selectedHashes, enable);

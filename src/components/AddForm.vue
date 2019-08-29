@@ -141,7 +141,7 @@
 <script lang="ts">
     import _ from "lodash";
     import Vue from "vue";
-    import {mapState} from "vuex";
+    import {mapState,mapGetters} from "vuex";
     import {api} from "../Api";
 
     const defaultParams = {
@@ -178,6 +178,9 @@
                     return _.get(state, "dialogs.add.params", {});
                 },
                 prefs: (state: any) => state.preferences,
+
+            }),
+            ...mapState('category',{
                 categories(state, getters) {
                     return getters.allCategories.map(c=>c.key)
                 },

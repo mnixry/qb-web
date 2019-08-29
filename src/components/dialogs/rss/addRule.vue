@@ -137,6 +137,8 @@
             }),
             ...mapState({
                 prefs: (state: any) => state.preferences,
+            }),
+            ...mapState('category',{
                 categories(state, getters) {
                     return getters.allCategories.map(c=>c.key)
                 },
