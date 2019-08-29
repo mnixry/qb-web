@@ -150,7 +150,9 @@ export default new Vuex.Store({
                 return _.merge({}, value, {hash: key});
             });
         },
-
+        allSavePaths(state,getters) {
+            return _.chain(getters.allTorrents).map(t => t.save_path).compact().value();
+        },
         torrentGroupBySite(state, getters) {
             return _.groupBy(getters.allTorrents, torrent => {
                 if (!torrent.tracker) {

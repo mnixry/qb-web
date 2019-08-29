@@ -61,12 +61,13 @@
                                     />
                                 </v-flex>
                                 <v-flex xs12>
-                                    <v-text-field
+                                    <v-combobox
                                             prepend-icon="mdi-folder"
-                                            label="下载路径"
                                             :value="params.savepath"
                                             @input="setParams('savepath', $event)"
-                                    ></v-text-field>
+                                            :items="allSavePaths"
+                                            label="下载路径"
+                                    ></v-combobox>
                                 </v-flex>
                                 <v-flex xs12>
                                     <v-combobox
@@ -89,8 +90,8 @@
                                 <v-flex>
                                     <v-checkbox
                                             label="自动管理"
-                                            :input-value="!!params.useAutoTMM"
-                                            @change="setParams('useAutoTMM', $event)"
+                                            :input-value="!!params.autoTMM"
+                                            @change="setParams('autoTMM', $event)"
                                             prepend-icon="mdi-brightness-auto"
                                     />
                                 </v-flex>
@@ -148,7 +149,7 @@
         urls: null,
         category: null,
         paused: false,
-        useAutoTMM: true,
+        autoTMM: false,
         skip_checking: false,
         root_folder: false,
         savepath: "",
@@ -185,6 +186,7 @@
                     return getters.allCategories.map(c=>c.key)
                 },
             }),
+            ...mapGetters(["allSavePaths"]),
             params() {
                 const perf = {
                     paused: this.prefs.start_paused_enabled,
