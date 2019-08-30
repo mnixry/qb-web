@@ -152,7 +152,7 @@
 
         },
         methods: {
-            ...mapActions(["setRule", "renameRule"]),
+            ...mapActions('rss',["setRule", "renameRule"]),
 
             validate() {
                 this.$validator.validateAll().then((valid) => {

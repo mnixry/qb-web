@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import _ from 'lodash';
 import {AllStateTypes} from '@/consts';
-import {torrentIsState} from '@/utils';
+import {getDiff, torrentIsState} from '@/utils';
 import {api} from '@/Api';
 import dayjs from 'dayjs';
 
@@ -44,6 +44,7 @@ export default new Vuex.Store({
         rid: 0,
         mainData: null,
         userConfig: loadConfig(),
+        orgPreferences: {},
         preferences: {},
         dialogs: {
             add: {
@@ -68,7 +69,10 @@ export default new Vuex.Store({
                 ...state.preferences,
                 ...payload,
             };
-            await api.action('app/setPreferences', {json: JSON.stringify(newPrefs)});
+            const subData = getDiff(state.orgPreferences, newPrefs);
+            if (Object.keys(subData).length > 0) {
+                await api.action('app/setPreferences', {json: JSON.stringify(subData)});
+            }
             return commit('updatePreferences', newPrefs);
         },
         async getAllData({commit, state}) {
@@ -118,6 +122,7 @@ export default new Vuex.Store({
             }
         },
         updatePreferences(state, payload) {
+            state.orgPreferences = _.clone(payload);
             state.preferences = payload;
         },
         updateConfig(state, payload) {
@@ -150,7 +155,7 @@ export default new Vuex.Store({
                 return _.merge({}, value, {hash: key});
             });
         },
-        allSavePaths(state,getters) {
+        allSavePaths(state, getters) {
             return _.chain(getters.allTorrents).map(t => t.save_path).compact().value();
         },
         torrentGroupBySite(state, getters) {

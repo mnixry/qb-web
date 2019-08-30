@@ -83,6 +83,15 @@ const defTrans = {
     },
 };
 
+export function getDiff(old, obj) {
+    let allkeys = _.union(_.keys(old), _.keys(obj));
+    return _.reduce(allkeys, function (result, key) {
+        if ( !_.isEqual(obj[key], old[key]) ) {
+            result[key] = obj[key]
+        }
+        return result;
+    }, {});
+}
 // tslint:disable-next-line:max-line-length
 export function buildFormComputed({keys, parent = '', prefix = ''}: { keys: object, parent?: string, prefix?: string }): object {
     return _.reduce(keys, (result, path: any, key) => {
