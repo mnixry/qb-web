@@ -3202,10 +3202,10 @@ faye-websocket@~0.11.1:
   dependencies:
     websocket-driver ">=0.5.1"
 
-fibers@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.npm.taobao.org/fibers/download/fibers-3.1.1.tgz#0238902ca938347bd779523692fbeefdf4f688ab"
-  integrity sha1-AjiQLKk4NHvXeVI2kvvu/fT2iKs=
+fibers@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npm.taobao.org/fibers/download/fibers-4.0.2.tgz#d04f9ccd0aba179588202202faeb4fed65d497f5"
+  integrity sha1-0E+czQq6F5WIICIC+utP7WXUl/U=
   dependencies:
     detect-libc "^1.0.3"
 
