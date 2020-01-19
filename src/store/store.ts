@@ -15,12 +15,15 @@ Vue.use(Vuex);
 const defaultConfig = {
     updateInterval: 2000,
     pagination: {
-        rowsPerPage: 1000
+        rowsPerPage: 1000,
+        descending:true,
+        sortBy:"added_on"
     },
     filter: {
         state: null,
         category: null,
-        site: null
+        site: null,
+        tag: null
     }
 };
 

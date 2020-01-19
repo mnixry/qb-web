@@ -291,7 +291,7 @@
                                     name: "标签名称"
                                 }]
                             }).then(r => {
-                                r && this.$store.dispatch("tag/createTags", res);
+                                r && this.$store.dispatch("tag/createTags", r);
                             })
                         },
                     }, {
