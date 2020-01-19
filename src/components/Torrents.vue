@@ -521,7 +521,7 @@ export default Vue.extend({
       this.$dialog.confirm({
         text: `确定重新检查?`,
         title: "重新检查",
-      }).then(async function(r) {
+      }).then(r => {
         if(r){
           return api.recheckTorrents(this.selectedHashes)
         }
